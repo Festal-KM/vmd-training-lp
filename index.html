@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VMD実践研修｜株式会社Grow Up Job</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --font-head:"Zen Kaku Gothic New",sans-serif;
+    --font-jp:"IBM Plex Sans JP",sans-serif;
+    --font-latin:"Plus Jakarta Sans",sans-serif;
+    --sky:#7EC7D8;
+    --sky-2:#A4DBE7;
+    --teal:#2E96B0;
+    --teal-d:#15677E;
+    --navy:#0E3742;
+    --ink:#15272D;
+    --soft:#5E7177;
+    --coral:#F2895C;
+    --coral-d:#E0703F;
+    --mist:#E9F4F7;
+    --pale:#F4FAFB;
+    --paper:#FFFFFF;
+    --line:rgba(15,70,84,.10);
+    --sh-card:0 24px 50px -28px rgba(14,55,66,.34);
+    --sh-sm:0 12px 28px -16px rgba(14,55,66,.26);
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-jp);
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;line-height:1.85;}
+  h1,h2,h3,h4{font-family:var(--font-head);margin:0;line-height:1.4;letter-spacing:.01em;}
+  p{margin:0;}
+  a{color:inherit;text-decoration:none;}
+  .lat{font-family:var(--font-latin);}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px;}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:11px;font-family:var(--font-latin);
+    font-weight:700;letter-spacing:.18em;font-size:12px;color:var(--teal-d);text-transform:uppercase;}
+  .eyebrow .dot{width:9px;height:9px;background:var(--coral);flex:none;}
+  .eyebrow.on-dark{color:var(--sky);}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-head);font-weight:700;
+    font-size:15px;padding:15px 28px;cursor:pointer;border:none;transition:transform .18s ease,box-shadow .18s ease,background .18s ease;}
+  .btn .ar{font-family:var(--font-latin);font-weight:800;}
+  .btn-primary{background:var(--coral);color:#fff;box-shadow:0 14px 30px -12px rgba(224,112,63,.7);}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 20px 38px -12px rgba(224,112,63,.8);background:var(--coral-d);}
+  .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.45);}
+  .btn-ghost:hover{background:rgba(255,255,255,.22);transform:translateY(-2px);}
+  .btn-dark{background:var(--navy);color:#fff;box-shadow:var(--sh-sm);}
+  .btn-dark:hover{transform:translateY(-2px);background:#0a2d36;}
+
+  /* ---------- header ---------- */
+  header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.82);
+    backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:box-shadow .3s;}
+  header.scrolled{box-shadow:0 8px 24px -18px rgba(14,55,66,.5);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:72px;}
+  .logo{display:flex;align-items:center;gap:11px;}
+  .logo .mark{width:36px;height:36px;flex:none;position:relative;
+    background:linear-gradient(145deg,var(--sky),var(--teal));
+    box-shadow:0 8px 18px -6px rgba(46,150,176,.6),inset 0 1px 1px rgba(255,255,255,.5);}
+  .logo .mark::after{content:"";position:absolute;left:50%;top:13px;width:12px;height:12px;
+    border:2.6px solid #fff;border-bottom:none;border-right:none;transform:translateX(-50%) rotate(45deg);}
+  .logo .name{font-family:var(--font-latin);font-weight:800;font-size:16px;color:var(--navy);line-height:1.05;}
+  .logo .name small{display:block;font-family:var(--font-jp);font-weight:500;font-size:8.5px;color:var(--soft);letter-spacing:.2em;margin-top:2px;}
+  .nav-links{display:flex;align-items:center;gap:30px;}
+  .nav-links a{font-size:13.5px;font-weight:600;color:var(--ink);transition:color .2s;}
+  .nav-links a:hover{color:var(--teal);}
+  .nav-cta{padding:11px 22px;font-size:13.5px;}
+  .nav-toggle{display:none;}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;background:var(--navy);color:#fff;overflow:hidden;}
+  .hero-bg{position:absolute;inset:0;z-index:0;
+    background:url('assets/cover-hero.png') 60% 32% / cover no-repeat;}
+  .hero-scrim{position:absolute;inset:0;z-index:1;
+    background:
+      radial-gradient(120% 100% at 8% 50%, rgba(8,40,49,.93) 0%, rgba(8,40,49,.74) 34%, rgba(8,40,49,.30) 62%, rgba(8,40,49,.12) 100%),
+      linear-gradient(to bottom, rgba(8,40,49,.5), rgba(8,40,49,0) 24%),
+      linear-gradient(to top, rgba(8,40,49,.65), rgba(8,40,49,0) 30%);}
+  .hero-glow{position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:radial-gradient(40% 50% at 88% 10%, rgba(126,199,216,.30), transparent 70%);}
+  .hero-inner{position:relative;z-index:2;padding:84px 0 92px;}
+  .hero-copy{max-width:760px;}
+  .hero h1{font-size:48px;font-weight:900;line-height:1.36;margin-top:22px;
+    text-shadow:0 2px 4px rgba(0,0,0,.32),0 6px 30px rgba(0,0,0,.4);}
+  .hero h1 .hl{color:var(--sky);}
+  .hero .lead{font-size:17px;line-height:2;color:#e7f2f5;margin-top:24px;max-width:560px;font-weight:500;
+    text-shadow:0 1px 3px rgba(0,0,0,.5);}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap;}
+  .hero-stats{display:flex;gap:14px;margin-top:46px;flex-wrap:wrap;}
+  .hstat{background:rgba(8,40,49,.42);border:1px solid rgba(255,255,255,.22);backdrop-filter:blur(3px);
+    padding:16px 24px;min-width:120px;}
+  .hstat .v{font-family:var(--font-latin);font-weight:800;font-size:30px;color:#fff;line-height:1;}
+  .hstat .v small{font-family:var(--font-jp);font-size:14px;font-weight:700;color:var(--sky);}
+  .hstat .k{font-size:11.5px;color:#bcd5dc;margin-top:7px;letter-spacing:.04em;}
+
+  /* ---------- section atoms ---------- */
+  section{position:relative;}
+  .sec{padding:96px 0;}
+  .sec-head{max-width:720px;}
+  .sec-head.center{margin:0 auto;text-align:center;}
+  .sec-head h2{font-size:36px;font-weight:900;color:var(--navy);margin-top:16px;line-height:1.42;}
+  .sec-head h2 .hl{color:var(--teal);}
+  .sec-head .sub{font-size:15.5px;color:var(--soft);margin-top:16px;line-height:1.9;}
+
+  /* pains */
+  .pains-sec{background:var(--pale);}
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:52px;}
+  .pain{background:#fff;border:1px solid var(--line);padding:34px 30px 30px;position:relative;box-shadow:var(--sh-sm);}
+  .pain .q{font-family:var(--font-latin);font-weight:800;font-size:30px;color:var(--sky);line-height:1;}
+  .pain h4{font-size:18px;font-weight:700;color:var(--navy);margin-top:18px;line-height:1.6;}
+  .pain p{font-size:13.5px;color:var(--soft);margin-top:12px;line-height:1.85;}
+  .pain .pico{position:absolute;top:30px;right:28px;width:30px;height:30px;color:var(--coral);opacity:.85;}
+
+  /* solution */
+  .sol-sec{background:var(--navy);color:#fff;overflow:hidden;}
+  .sol-sec::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(46% 60% at 92% 0%, rgba(126,199,216,.20), transparent 70%),
+      radial-gradient(40% 50% at 0% 100%, rgba(242,137,92,.12), transparent 70%);}
+  .sol-inner{position:relative;}
+  .sol-head{max-width:760px;}
+  .sol-head h2{font-size:34px;font-weight:900;margin-top:16px;line-height:1.46;color:#fff;}
+  .sol-head h2 .u{color:var(--sky);}
+  .ladder{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:48px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.14);}
+  .lstep{background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.02));padding:34px 30px 32px;border-top:3px solid var(--coral);position:relative;}
+  .lstep .ln{font-family:var(--font-latin);font-weight:800;font-size:15px;color:var(--sky);}
+  .lstep .le{font-family:var(--font-latin);font-weight:800;font-size:11px;letter-spacing:.22em;color:rgba(255,255,255,.55);margin-left:10px;}
+  .lstep h4{font-size:21px;font-weight:900;color:#fff;margin-top:16px;line-height:1.5;}
+  .lstep p{font-size:13.5px;color:#cfe2e8;margin-top:12px;line-height:1.85;}
+
+  /* features */
+  .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:54px;}
+  .feat{padding:6px 4px;}
+  .feat .fn{font-family:var(--font-latin);font-weight:800;font-size:15px;color:var(--teal);letter-spacing:.06em;}
+  .feat .fic{width:58px;height:58px;background:var(--mist);display:flex;align-items:center;justify-content:center;margin:18px 0 20px;}
+  .feat .fic svg{width:28px;height:28px;color:var(--teal-d);}
+  .feat h4{font-size:20px;font-weight:700;color:var(--navy);line-height:1.5;}
+  .feat p{font-size:14px;color:var(--soft);margin-top:13px;line-height:1.9;}
+  .feat .fbar{width:34px;height:4px;background:var(--coral);margin-top:18px;}
+
+  /* skills */
+  .skills-sec{background:var(--pale);}
+  .skills{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:52px;}
+  .skill{background:#fff;border:1px solid var(--line);padding:38px 36px 34px;box-shadow:var(--sh-sm);}
+  .skill .cap{display:flex;align-items:center;gap:14px;}
+  .skill .sic{width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex:none;}
+  .skill.a .sic{background:var(--mist);} .skill.b .sic{background:#FBE7DB;}
+  .skill .sic svg{width:25px;height:25px;}
+  .skill h3{font-size:21px;font-weight:700;color:var(--navy);}
+  .skill h3 small{display:block;font-family:var(--font-latin);font-weight:700;font-size:11px;letter-spacing:.14em;color:var(--teal);margin-bottom:3px;text-transform:uppercase;}
+  .skill ul{list-style:none;margin:24px 0 0;padding:0;}
+  .skill li{font-size:14.5px;color:var(--ink);padding:13px 0 13px 30px;position:relative;border-bottom:1px dashed var(--line);line-height:1.6;}
+  .skill li:last-child{border-bottom:none;}
+  .skill.a li::before{content:"";position:absolute;left:4px;top:19px;width:11px;height:11px;background:var(--sky);}
+  .skill.b li::before{content:"";position:absolute;left:4px;top:19px;width:11px;height:11px;background:var(--coral);}
+
+  /* curriculum */
+  .meta-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:50px;}
+  .mcard{background:var(--mist);padding:24px 20px;text-align:center;}
+  .mcard .v{font-family:var(--font-latin);font-weight:800;font-size:34px;color:var(--teal-d);line-height:1;}
+  .mcard .v small{font-size:16px;font-weight:700;}
+  .mcard .k{font-size:12.5px;color:var(--soft);margin-top:8px;}
+  .cur{margin-top:30px;display:flex;flex-direction:column;gap:14px;}
+  .cstep{display:grid;grid-template-columns:96px 1fr;background:#fff;border:1px solid var(--line);box-shadow:var(--sh-sm);overflow:hidden;}
+  .cstep .no{background:linear-gradient(165deg,var(--teal),var(--teal-d));color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+  .cstep .no .e{font-family:var(--font-latin);font-weight:700;font-size:10px;letter-spacing:.14em;color:var(--sky-2);}
+  .cstep .no .n{font-family:var(--font-latin);font-weight:800;font-size:38px;line-height:1;}
+  .cstep .bd{padding:24px 30px;display:flex;align-items:center;gap:28px;}
+  .cstep .bd .main{flex:1.3;}
+  .cstep .bd h4{font-size:19px;font-weight:700;color:var(--navy);}
+  .cstep .bd .desc{font-size:13.5px;color:var(--soft);margin-top:9px;line-height:1.8;}
+  .cstep .bd .out{flex:1;border-left:1px solid var(--line);padding-left:26px;}
+  .cstep .bd .out .ol{font-family:var(--font-latin);font-weight:700;font-size:10px;letter-spacing:.14em;color:var(--coral);}
+  .cstep .bd .out .ot{font-size:13.5px;color:var(--ink);font-weight:600;margin-top:6px;line-height:1.6;}
+
+  /* approach */
+  .appr-sec{background:var(--navy);color:#fff;overflow:hidden;}
+  .appr-sec::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(44% 56% at 4% 4%, rgba(126,199,216,.18), transparent 70%);}
+  .appr-grid{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .appr-l h2{font-size:32px;font-weight:900;line-height:1.46;color:#fff;margin-top:16px;}
+  .appr-l h2 .hl{color:var(--sky);}
+  .appr-l p{font-size:15px;color:#cfe2e8;margin-top:20px;line-height:2;}
+  .timeblock{margin-top:34px;border:1px solid rgba(255,255,255,.2);}
+  .timeblock .tb{display:flex;align-items:center;gap:18px;padding:20px 24px;}
+  .timeblock .tb+.tb{border-top:1px solid rgba(255,255,255,.16);}
+  .timeblock .tt{font-family:var(--font-latin);font-weight:800;font-size:26px;color:var(--sky);min-width:78px;}
+  .timeblock .tt small{font-size:13px;font-weight:700;}
+  .timeblock .tx h4{font-size:16px;font-weight:700;color:#fff;}
+  .timeblock .tx p{font-size:12.5px;color:#bcd5dc;margin-top:4px;}
+  .appr-r{display:flex;flex-direction:column;gap:16px;}
+  .pack{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));border:1px solid rgba(255,255,255,.18);padding:30px 30px;}
+  .pack .pl{font-family:var(--font-latin);font-weight:800;font-size:12px;letter-spacing:.18em;color:var(--sky);}
+  .pack h3{font-size:22px;font-weight:900;color:#fff;margin-top:10px;}
+  .pack ul{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;}
+  .pack li{font-size:13px;color:#dfeef1;padding-left:22px;position:relative;line-height:1.5;}
+  .pack li::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;background:var(--coral);}
+
+  /* outline + faq */
+  .outline{display:grid;grid-template-columns:1fr 1fr;gap:60px;margin-top:52px;align-items:start;}
+  .otable{border-top:2px solid var(--navy);}
+  .orow{display:grid;grid-template-columns:128px 1fr;gap:20px;padding:18px 6px;border-bottom:1px solid var(--line);}
+  .orow .ok{font-family:var(--font-head);font-weight:700;font-size:14px;color:var(--navy);}
+  .orow .ov{font-size:14px;color:var(--ink);line-height:1.7;}
+  .orow .ov .tbd{display:inline-block;font-size:11px;font-weight:700;color:var(--coral-d);background:#FBE7DB;padding:2px 9px;margin-left:6px;}
+  .faq h3{font-size:19px;font-weight:900;color:var(--navy);margin-bottom:10px;}
+  .qa{border-bottom:1px solid var(--line);}
+  .qa summary{list-style:none;cursor:pointer;padding:18px 40px 18px 30px;position:relative;font-size:15px;font-weight:700;color:var(--navy);}
+  .qa summary::-webkit-details-marker{display:none;}
+  .qa summary::before{content:"Q";position:absolute;left:4px;top:18px;font-family:var(--font-latin);font-weight:800;color:var(--teal);font-size:15px;}
+  .qa summary::after{content:"+";position:absolute;right:8px;top:15px;font-size:22px;color:var(--soft);font-weight:400;transition:transform .2s;}
+  .qa[open] summary::after{transform:rotate(45deg);}
+  .qa p{padding:0 30px 20px 30px;font-size:14px;color:var(--soft);line-height:1.9;}
+
+  /* CTA */
+  .cta-sec{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;overflow:hidden;position:relative;}
+  .cta-sec::before{content:"";position:absolute;right:-80px;top:-80px;width:360px;height:360px;border-radius:50%;background:rgba(126,199,216,.22);}
+  .cta-sec::after{content:"";position:absolute;left:-60px;bottom:-100px;width:280px;height:280px;border-radius:50%;background:rgba(242,137,92,.18);}
+  .cta-inner{position:relative;text-align:center;padding:90px 0;}
+  .cta-inner h2{font-size:40px;font-weight:900;line-height:1.4;}
+  .cta-inner p{font-size:16px;color:#eaf6f8;margin-top:20px;line-height:1.9;}
+  .cta-btns{display:flex;gap:16px;justify-content:center;margin-top:38px;flex-wrap:wrap;}
+  .btn-onteal{background:#fff;color:var(--teal-d);}
+  .btn-onteal:hover{transform:translateY(-2px);box-shadow:0 18px 36px -14px rgba(0,0,0,.4);}
+
+  /* footer */
+  footer{background:var(--navy);color:#fff;padding:64px 0 30px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;}
+  .foot-brand .logo .name{color:#fff;}
+  .foot-brand .logo .name small{color:rgba(255,255,255,.6);}
+  .foot-brand p{font-size:13px;color:#a9c4cb;margin-top:18px;line-height:1.9;max-width:300px;}
+  .foot-col h5{font-family:var(--font-latin);font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--sky);text-transform:uppercase;margin:0 0 16px;}
+  .foot-col a,.foot-col p{display:block;font-size:13.5px;color:#cfe0e4;margin-bottom:11px;line-height:1.6;}
+  .foot-col a:hover{color:#fff;}
+  .foot-bottom{border-top:1px solid rgba(255,255,255,.14);margin-top:48px;padding-top:24px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:12px;color:#8fb0b8;}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.3,1),transform .7s cubic-bezier(.2,.7,.3,1);}
+  .rv.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none;}}
+
+  /* responsive */
+  @media (max-width:980px){
+    .pains,.feats,.ladder{grid-template-columns:1fr;}
+    .skills,.appr-grid,.outline,.foot-grid{grid-template-columns:1fr;gap:30px;}
+    .meta-strip{grid-template-columns:repeat(2,1fr);}
+    .hero h1{font-size:40px;}
+    .sec-head h2,.cta-inner h2{font-size:30px;}
+    .cstep .bd{flex-direction:column;align-items:flex-start;gap:14px;}
+    .cstep .bd .out{border-left:none;padding-left:0;border-top:1px solid var(--line);padding-top:14px;width:100%;}
+    .pack ul{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px;}
+    .hero h1{font-size:32px;}
+    .sec{padding:64px 0;}
+    .hero-inner{padding:54px 0 64px;}
+    .meta-strip{grid-template-columns:1fr 1fr;}
+    .cstep{grid-template-columns:72px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#top" class="logo">
+      <span class="mark"></span>
+      <span class="name">Grow Up Job<small>VMD PRACTICAL TRAINING</small></span>
+    </a>
+    <nav class="nav-links">
+      <a href="#challenge">課題</a>
+      <a href="#solution">提供価値</a>
+      <a href="#curriculum">カリキュラム</a>
+      <a href="#approach">進め方</a>
+      <a href="#outline">開催概要</a>
+    </nav>
+    <a href="#contact" class="btn btn-primary nav-cta">お問い合わせ<span class="ar">→</span></a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-scrim"></div>
+  <div class="hero-glow"></div>
+  <div class="wrap hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow on-dark"><span class="dot"></span>携帯電話 催事営業向け｜実践研修プログラム</span>
+      <h1>催事で<span class="hl">立ち止まる</span>売り場を、<br>自分たちの手で、つくる。</h1>
+      <p class="lead">「装飾」ではなく、立ち止まり → 会話 → 着席を生む“設計”へ。全6回のワークショップで、現場ですぐ使えるVMDを身につける実践研修です。</p>
+      <div class="hero-cta">
+        <a href="#contact" class="btn btn-primary">資料請求・お問い合わせ<span class="ar">→</span></a>
+        <a href="#curriculum" class="btn btn-ghost">カリキュラムを見る</a>
+      </div>
+      <div class="hero-stats">
+        <div class="hstat"><div class="v">6<small>回</small></div><div class="k">全カリキュラム</div></div>
+        <div class="hstat"><div class="v">90<small>分</small></div><div class="k">ワークショップ／回</div></div>
+        <div class="hstat"><div class="v">6<small>点</small></div><div class="k">持ち帰る成果物</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHALLENGE ============ -->
+<section class="sec pains-sec" id="challenge">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>The Challenge</span>
+      <h2>催事の売り場で、<span class="hl">こんなお悩み</span>はありませんか？</h2>
+      <p class="sub">努力しているのに成果が安定しない —— その多くは「センス」ではなく、売り場の“設計”の問題です。</p>
+    </div>
+    <div class="pains">
+      <div class="pain rv">
+        <div class="q">Q1</div>
+        <svg class="pico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 1 0-16 0 8 8 0 0 0 16 0Z"/><path d="M12 8v4M12 16h.01"/></svg>
+        <h4>人通りはあるのに、<br>お客さまの足が止まらない。</h4>
+        <p>遠目で「自分に何の得があるのか」が一瞬で伝わらず、通り過ぎられてしまう。</p>
+      </div>
+      <div class="pain rv">
+        <div class="q">Q2</div>
+        <svg class="pico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <h4>POPは貼っているが、<br>会話のきっかけにならない。</h4>
+        <p>“読むだけ”で終わり、お客さまの指差し・質問・相談につながっていかない。</p>
+      </div>
+      <div class="pain rv">
+        <div class="q">Q3</div>
+        <svg class="pico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        <h4>売れる人と売れない人の差が<br>大きく、再現できない。</h4>
+        <p>売り場づくりが個人の感覚に依存し、チームで共有できる「仕組み」がない。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SOLUTION ============ -->
+<section class="sec sol-sec" id="solution">
+  <div class="wrap sol-inner">
+    <div class="sol-head rv">
+      <span class="eyebrow on-dark"><span class="dot"></span>Our Solution</span>
+      <h2>VMD研修は、<span class="u">成果に直結する売り場</span>を<br>自分たちでつくれる人材を育てます。</h2>
+    </div>
+    <div class="ladder">
+      <div class="lstep rv"><div><span class="ln">01</span><span class="le">STOP</span></div><h4>素通りを、<br>立ち止まりに。</h4><p>3秒判断の原則で、遠目から「得」が伝わる入口を設計する。</p></div>
+      <div class="lstep rv"><div><span class="ln">02</span><span class="le">TALK</span></div><h4>立ち止まりを、<br>会話に。</h4><p>指差し→一言→質問を生むPOPと声かけで、自然な会話を起こす。</p></div>
+      <div class="lstep rv"><div><span class="ln">03</span><span class="le">SEAT</span></div><h4>会話を、<br>着席・相談に。</h4><p>導線と運用を整え、相談・成約につながる流れを仕組み化する。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURES ============ -->
+<section class="sec" id="features">
+  <div class="wrap">
+    <div class="sec-head center rv">
+      <span class="eyebrow"><span class="dot"></span>Why Grow Up Job</span>
+      <h2>研修の<span class="hl">3つの特徴</span></h2>
+    </div>
+    <div class="feats">
+      <div class="feat rv">
+        <div class="fn">01</div>
+        <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div>
+        <h4>入口設計から実装まで<br>一気通貫で実践</h4>
+        <p>3秒判断・訴求設計から導線・POP・現場運用まで、成果に直結する流れを通しで体験します。</p>
+        <div class="fbar"></div>
+      </div>
+      <div class="feat rv">
+        <div class="fn">02</div>
+        <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+        <h4>そのまま現場で使える<br>成果物を作成</h4>
+        <p>POP一式・Canvaテンプレート・チェックリスト。研修後すぐ売り場で使える「運用パック」が手に入ります。</p>
+        <div class="fbar"></div>
+      </div>
+      <div class="feat rv">
+        <div class="fn">03</div>
+        <div class="fic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
+        <h4>ワークショップ中心の<br>超実践スタイル</h4>
+        <p>自分たちの催事を題材に手を動かす実践型。知識ではなく“現場でできる状態”を作ります。</p>
+        <div class="fbar"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section class="sec skills-sec" id="skills">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>What You Gain</span>
+      <h2>研修で身につく<span class="hl">2つのスキル</span></h2>
+      <p class="sub">知識のインプットで終わらせず、“現場で動かせる”力にします。</p>
+    </div>
+    <div class="skills">
+      <div class="skill a rv">
+        <div class="cap">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="#15677E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 21V9"/></svg></div>
+          <h3><small>Sales Floor Design</small>売り場設計スキル</h3>
+        </div>
+        <ul>
+          <li>3秒判断と「5観点」での売り場診断</li>
+          <li>遠目→近距離→着席の3層訴求設計</li>
+          <li>4ゾーンと立ち位置による導線づくり</li>
+          <li>会話を生むPOPの文言・条件設計</li>
+        </ul>
+      </div>
+      <div class="skill b rv">
+        <div class="cap">
+          <div class="sic"><svg viewBox="0 0 24 24" fill="none" stroke="#C9622F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+          <h3><small>Operation &amp; Service</small>接客・運用スキル</h3>
+        </div>
+        <ul>
+          <li>指差し→一言→質問→着席の声かけ連動</li>
+          <li>役割分担とトラブル対処フレーズ</li>
+          <li>当日崩れないチェックリスト運用</li>
+          <li>改善ログで学びを残す再現の仕組み</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CURRICULUM ============ -->
+<section class="sec" id="curriculum">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>Curriculum</span>
+      <h2>全6回で、<span class="hl">売り場・会話・運用</span>を統合する。</h2>
+      <p class="sub">各回は「講義30分＋ワークショップ90分」。回を追うごとに成果物が積み上がり、最終回には現場でそのまま使える運用パックが完成します。</p>
+    </div>
+    <div class="meta-strip rv">
+      <div class="mcard"><div class="v">6<small>回</small></div><div class="k">全カリキュラム</div></div>
+      <div class="mcard"><div class="v">2<small>時間</small></div><div class="k">1回あたり</div></div>
+      <div class="mcard"><div class="v">90<small>分</small></div><div class="k">ワークショップ</div></div>
+      <div class="mcard"><div class="v">6<small>点</small></div><div class="k">持ち帰る成果物</div></div>
+    </div>
+    <div class="cur">
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">1</span></div>
+        <div class="bd"><div class="main"><h4>VMD入門 ／ 3秒で伝わる入口設計</h4><div class="desc">VMDを「行動を生む設計」と捉え直し、催事の3秒判断と訴求の3層構造を理解する。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">一言訴求3〜5本＋3層訴求＋POPラフ</div></div></div>
+      </div>
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">2</span></div>
+        <div class="bd"><div class="main"><h4>事例で学ぶ「勝ちパターン」</h4><div class="desc">良い事例をフレームで分解し、携帯催事で効く“型”を抽出して自現場へ転用する。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">採用する型2つ＋掲示構成案</div></div></div>
+      </div>
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">3</span></div>
+        <div class="bd"><div class="main"><h4>導線・レイアウト改善</h4><div class="desc">4ゾーンと立ち位置で導線を評価。詰まり・迷い・不安を潰す改善案を決める。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">改善案A/B/C＋採用案・運用ToDo</div></div></div>
+      </div>
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">4</span></div>
+        <div class="bd"><div class="main"><h4>POP設計（文言と条件）</h4><div class="desc">POPを「指差しして会話を始める道具」として、文言・構成レベルで一式を完成させる。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">POP一式（遠目/近距離/条件枠/誘導）</div></div></div>
+      </div>
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">5</span></div>
+        <div class="bd"><div class="main"><h4>Canvaで作る・揃える・回す</h4><div class="desc">Canvaの基礎を習得し、第4回のAI生成POPを編集可能なテンプレート化。誰でも一定品質で作れる運用ルールまで整える。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">Canva版POPテンプレート＋運用ルール</div></div></div>
+      </div>
+      <div class="cstep rv">
+        <div class="no"><span class="e">VOL</span><span class="n">6</span></div>
+        <div class="bd"><div class="main"><h4>現場実装（ロールプレイ）</h4><div class="desc">役割・立ち位置・点検・トラブル対処まで決め、ロープレで現場実装レベルに仕上げる。</div></div>
+          <div class="out"><div class="ol">OUTPUT</div><div class="ot">現場実装計画＋ロープレ台本＋対処集</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ APPROACH ============ -->
+<section class="sec appr-sec" id="approach">
+  <div class="wrap appr-grid">
+    <div class="appr-l rv">
+      <span class="eyebrow on-dark"><span class="dot"></span>How It Works</span>
+      <h2>“とにかく実践”。<br><span class="hl">手を動かして</span>身につける。</h2>
+      <p>各回2時間。最初の30分で要点を押さえ、残り90分はひたすらワークショップ。自分たちの催事を題材に手を動かすから、研修が終わったその日から現場で使えます。</p>
+      <div class="timeblock">
+        <div class="tb"><div class="tt">30<small>分</small></div><div class="tx"><h4>講義（インプット）</h4><p>その回の要点と「型」を最短で理解する</p></div></div>
+        <div class="tb"><div class="tt">90<small>分</small></div><div class="tx"><h4>ワークショップ（アウトプット）</h4><p>自現場を題材に、成果物をその場で完成させる</p></div></div>
+      </div>
+    </div>
+    <div class="appr-r rv">
+      <div class="pack">
+        <div class="pl">TAKE-HOME PACK</div>
+        <h3>持ち帰る「運用パック」</h3>
+        <ul>
+          <li>3層訴求・一言訴求</li>
+          <li>POP一式（4種）</li>
+          <li>Canvaテンプレート</li>
+          <li>導線改善プラン</li>
+          <li>当日チェックリスト</li>
+          <li>ロープレ台本・対処集</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OUTLINE + FAQ ============ -->
+<section class="sec" id="outline">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow"><span class="dot"></span>Overview &amp; FAQ</span>
+      <h2>開催概要 と <span class="hl">よくあるご質問</span></h2>
+    </div>
+    <div class="outline">
+      <div class="rv">
+        <div class="otable">
+          <div class="orow"><div class="ok">対象</div><div class="ov">携帯電話の催事営業に携わる販売スタッフ・現場責任者</div></div>
+          <div class="orow"><div class="ok">回数・時間</div><div class="ov">全6回／各2時間（講義30分＋ワークショップ90分）</div></div>
+          <div class="orow"><div class="ok">定員</div><div class="ov">応相談<span class="tbd">調整中</span></div></div>
+          <div class="orow"><div class="ok">開催形式</div><div class="ov">対面／オンライン<span class="tbd">ご相談</span></div></div>
+          <div class="orow"><div class="ok">受講料</div><div class="ov"><strong style="font-family:var(--font-latin);font-size:17px;color:var(--navy);">¥363,000</strong>（税抜）／ 1人</div></div>
+          <div class="orow"><div class="ok">主催</div><div class="ov">株式会社 Grow Up Job</div></div>
+        </div>
+      </div>
+      <div class="faq rv">
+        <details class="qa" open><summary>VMDや売り場づくりの知識がなくても受講できますか？</summary><p>はい。VMDの基礎から始め、毎回ワークショップで手を動かしながら進めるため、未経験の方でも無理なく実践レベルまで到達できます。</p></details>
+        <details class="qa"><summary>自社の催事に合わせた内容にできますか？</summary><p>できます。各回のワークショップは自分たちの催事を題材に行うため、そのまま現場で使える成果物が手に入ります。事前に現場の状況をうかがって設計します。</p></details>
+        <details class="qa"><summary>Canvaを使ったことがなくても大丈夫ですか？</summary><p>第5回でCanvaの基礎から扱います。POPを編集可能なテンプレートにし、誰でも一定品質で作り続けられる運用ルールまで整えます。</p></details>
+        <details class="qa"><summary>対面とオンライン、どちらに対応していますか？</summary><p>どちらにも対応可能です。人数・拠点・ご予算に合わせて最適な形式をご提案します。まずはお気軽にご相談ください。</p></details>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta-sec" id="contact">
+  <div class="wrap cta-inner rv">
+    <h2>催事の現場を、<br>“成果が出る売り場”に変えませんか。</h2>
+    <p>貴社の催事に合わせて研修を設計します。対象人数・開催形式など、お気軽にご相談ください。</p>
+    <div class="cta-btns">
+      <a href="mailto:info@growup-job.co.jp" class="btn btn-onteal">資料請求する<span class="ar">→</span></a>
+      <a href="tel:070-2292-9941" class="btn btn-ghost">070-2292-9941</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <span class="mark"></span>
+          <span class="name">Grow Up Job<small>KK・GROW UP JOB</small></span>
+        </div>
+        <p>「共に成長できる未来を」。人と企業をつなぎ、入職後の定着までを支える。販売現場に強いGrow Up JobのVMD実践研修です。</p>
+      </div>
+      <div class="foot-col">
+        <h5>Program</h5>
+        <a href="#challenge">課題</a>
+        <a href="#solution">提供価値</a>
+        <a href="#curriculum">カリキュラム</a>
+        <a href="#approach">研修の進め方</a>
+        <a href="#outline">開催概要・FAQ</a>
+      </div>
+      <div class="foot-col">
+        <h5>Contact</h5>
+        <p>株式会社 Grow Up Job</p>
+        <a href="mailto:info@growup-job.co.jp">info@growup-job.co.jp</a>
+        <a href="tel:070-2292-9941">070-2292-9941</a>
+        <p>茨城県ひたちなか市市毛1104‐1V202</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© Grow Up Job ｜ VMD実践研修</span>
+      <span class="lat">VMD Practical Training Program</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // header shadow on scroll
+  const hdr = document.getElementById('hdr');
+  const onScroll = () => hdr.classList.toggle('scrolled', window.scrollY > 12);
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, {threshold:0.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach((el,i)=>{
+    el.style.transitionDelay = ((i % 3) * 80) + 'ms';
+    io.observe(el);
+  });
+</script>
+</body>
+</html>
