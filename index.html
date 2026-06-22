@@ -227,7 +227,10 @@
   .qa summary::before{content:"Q";position:absolute;left:4px;top:18px;font-family:var(--font-latin);font-weight:800;color:var(--teal);font-size:15px;}
   .qa summary::after{content:"+";position:absolute;right:8px;top:15px;font-size:22px;color:var(--soft);font-weight:400;transition:transform .2s;}
   .qa[open] summary::after{transform:rotate(45deg);}
-  .qa p{padding:0 30px 20px 30px;font-size:14px;color:var(--soft);line-height:1.9;}
+  .qa p{padding:0 30px 20px 30px;font-size:14px;color:var(--soft);line-height:1.9;
+    overflow:hidden;height:0;opacity:0;transition:height .32s cubic-bezier(.4,0,.2,1),opacity .25s ease;}
+  .qa[open] p{height:auto;opacity:1;}
+  @media (prefers-reduced-motion:reduce){ .qa p{transition:none;} }
 
   /* CTA */
   .cta-sec{background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;overflow:hidden;position:relative;}
@@ -731,6 +734,45 @@
   document.querySelectorAll('.rv').forEach((el,i)=>{
     el.style.transitionDelay = ((i % 3) * 80) + 'ms';
     io.observe(el);
+  });
+
+  // FAQ accordion: slide down / slide up
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('.qa').forEach((d) => {
+    const summary = d.querySelector('summary');
+    const panel = d.querySelector('p');
+    summary.addEventListener('click', (e) => {
+      e.preventDefault();
+      if (d.dataset.animating) return;
+      const closing = d.open;
+      if (reduceMotion) { d.open = !closing; return; }   // no animation
+      d.dataset.animating = '1';
+      let done = false;
+      const finish = () => {
+        if (done) return; done = true;
+        if (closing) d.open = false;
+        panel.style.height = ''; panel.style.opacity = '';
+        delete d.dataset.animating;
+      };
+      panel.addEventListener('transitionend', (ev) => { if (ev.propertyName === 'height') finish(); });
+      setTimeout(finish, 450);                            // fallback if transitionend doesn't fire
+      if (closing) {
+        // slide up
+        panel.style.height = panel.scrollHeight + 'px';
+        panel.getBoundingClientRect();                    // force reflow
+        panel.style.opacity = '0';
+        panel.style.height = '0px';
+      } else {
+        // slide down
+        d.open = true;
+        const target = panel.scrollHeight;
+        panel.style.height = '0px';
+        panel.style.opacity = '0';
+        panel.getBoundingClientRect();                    // force reflow
+        panel.style.height = target + 'px';
+        panel.style.opacity = '1';
+      }
+    });
   });
 </script>
 </body>
