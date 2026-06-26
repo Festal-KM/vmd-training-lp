@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=IBM+Plex+Sans+JP:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-<script src="image-slot.js"></script>
 <style>
   :root{
     --font-head:"Zen Kaku Gothic New",sans-serif;
@@ -155,7 +154,7 @@
     border-top:1px solid var(--line);padding-top:6mm;}
   .cover-contact .cc-left{display:flex;align-items:center;gap:13px;}
   .cover-contact .qbox{width:60px;height:60px;border-radius:2px;background:#fff;border:1px solid var(--line);padding:5px;flex:none;}
-  .cover-contact .qbox image-slot{width:100%;height:100%;display:block;}
+  .cover-contact .qbox img{width:100%;height:100%;display:block;object-fit:contain;}
   .cover-contact .cc-left .ql{font-size:11px;color:var(--soft);line-height:1.6;}
   .cover-contact .cc-left .ql b{display:block;color:var(--navy);font-weight:700;font-size:12.5px;margin-bottom:2px;}
   .cover-contact .cc-right{text-align:right;}
@@ -245,7 +244,7 @@
   .closing .cta .info{font-size:12px;line-height:1.85;color:#eaf6f9;text-align:right;}
   .closing .cta .info b{font-family:var(--font-latin);font-size:14.5px;color:#fff;white-space:nowrap;}
   .closing .cta .qbox{width:62px;height:62px;border-radius:2px;background:#fff;padding:6px;flex:none;}
-  .closing .cta .qbox image-slot{width:100%;height:100%;display:block;}
+  .closing .cta .qbox img{width:100%;height:100%;display:block;object-fit:contain;}
 
   .foot-meta{position:absolute;left:15mm;bottom:6mm;font-size:9px;color:#9fb4ba;letter-spacing:.05em;z-index:1;white-space:nowrap;}
   .pg{position:absolute;right:15mm;bottom:6mm;font-family:var(--font-latin);font-size:10px;color:var(--soft);letter-spacing:.1em;z-index:1;}
@@ -294,7 +293,7 @@
 
     <div class="cover-contact">
       <div class="cc-left">
-        <div class="qbox"><image-slot id="qr-cover" fit="contain" src="assets/lp-qr.png" placeholder="QR"></image-slot></div>
+        <div class="qbox"><img src="assets/lp-qr.png" alt="QR"></div>
         <div class="ql"><b>お問い合わせはこちら</b>QRから資料請求・ご相談</div>
       </div>
       <div class="cc-right">
@@ -453,7 +452,7 @@
       </div>
       <div class="cta">
         <div class="info"><b>info@growup-job.com</b><br>株式会社 Grow Up Job</div>
-        <div class="qbox"><image-slot id="qr-close" fit="contain" src="assets/lp-qr.png" placeholder="QR"></image-slot></div>
+        <div class="qbox"><img src="assets/lp-qr.png" alt="QR"></div>
       </div>
     </div>
 
@@ -462,5 +461,15 @@
   </div>
 </section>
 
+<script>
+  (function(){
+    function go(){ setTimeout(function(){ window.print(); }, 400); }
+    var imgs=[].slice.call(document.images);
+    var left=imgs.length;
+    function done(){ if(--left<=0) go(); }
+    if(!left){ window.addEventListener('load', go, {once:true}); return; }
+    imgs.forEach(function(im){ if(im.complete) done(); else { im.addEventListener('load',done,{once:true}); im.addEventListener('error',done,{once:true}); } });
+  })();
+</script>
 </body>
 </html>
